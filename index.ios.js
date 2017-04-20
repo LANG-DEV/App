@@ -17,10 +17,13 @@ export default class App extends Component {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
-          Welcome to React Native!
+          Welcome to React Native@
         </Text>
         <Text style={styles.instructions}>
-          To get started, edit index.ios.js
+          This is made by Mengmeng and Hao
+        </Text>
+        <Text style={styles.instructions}>
+          "To get started, edit index.ios.js"
         </Text>
         <Text style={styles.instructions}>
           Press Cmd+R to reload,{'\n'}
