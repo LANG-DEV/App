@@ -16,7 +16,7 @@
 		"babel-jest": "19.0.0",
 		"babel-preset-flow": "^6.23.0",
 		"babel-preset-react-native": "1.9.1",
-		"flow-bin": "^0.44.2",
+		"flow-bin": "^0.40.0",
 		"jest": "19.0.2",
 		"react-test-renderer": "16.0.0-alpha.6"
 	},
