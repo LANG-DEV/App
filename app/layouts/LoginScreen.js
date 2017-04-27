@@ -1,7 +1,11 @@
 import React from 'react';
 import {
-  AppRegistry,
-  Text,
+    AppRegistry,
+    ScrollView,
+    Text,
+    TextInput,
+    View,
+    Button
 } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 
@@ -12,11 +16,12 @@ class LoginScreen extends React.Component {
 
   render() {
     return (
-      <form>
-        Username: <input type="text", placeholder="Enter Username", name="username"/>
-        Password: <input type="password", placeholder="Enter Password", name="passwd"/>
-        <button type="submit">Login</button>
-      </form>
+      <ScrollView>
+        <Text>Login</Text>
+        <TextInput placeholder="Enter Username" />
+        <TextInput secureTextEntry={true}, placeholder="Enter Password" />
+        <Button title="Submit"/>
+      </ScrollView>
     )
   }
 }
