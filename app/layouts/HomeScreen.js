@@ -1,2 +1,9 @@
 import React from 'react';
-import Text from 'react-native';
+import {
+  AppRegistry,
+  Text,
+} from 'react-native';
+import { StackNavigator } from 'react-navigation';
+
+class HomeScreen extends React.Component {
+}
