@@ -1,3 +1,7 @@
+/**
+ *
+ */
+
 import {StackNavigator} from 'react-navigation';
 
 import HomeScreen from '../layouts/HomeScreen'
@@ -11,7 +15,8 @@ const Router = StackNavigator({
         screen: LoginScreen //require('./layouts/LoginScreen')
     }
 }, {
-    initialRouteName: 'Home'
+    initialRouteName: 'Home',
+    headerMode: 'none',
 });
 
 export default Router;

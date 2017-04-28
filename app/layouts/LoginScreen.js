@@ -1,8 +1,10 @@
 import React from 'react';
 import {
-    Animated,Container,Button,Image,KeyboardAvoidingView,
-    StyleSheet,Text,TextInput,TouchableOpacity,View,Keyboard
+    Animated, Container, Button, Image, KeyboardAvoidingView, StyleSheet, Text,
+    TextInput, TouchableOpacity, View, Keyboard, Platform, StatusBar
 } from 'react-native';
+
+import Dimensions from 'Dimensions'
 
 import { StackNavigator } from 'react-navigation';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
@@ -21,8 +23,10 @@ export default class LoginScreen extends React.Component {
         this.state = {
             username: '',
             password: '',
+            keyboardOn: false,
         };
 
+        this.keyboardOn = false;
         this.imageHeight = new Animated.Value(200);
     }
 
@@ -42,19 +46,27 @@ export default class LoginScreen extends React.Component {
                 alertType: 'error',
                 durationToShow: 0,
                 stylesheetError: {
-                    backgroundColor: 'rgba(231, 76, 60, 1)'
+                    backgroundColor: 'rgba(200, 76, 60, 1)'
                 }
             });
         }
     }
 
     onLoginButtonPressed = () => {
+        Keyboard.dismiss();
         auth.login(this.state.username, this.state.password, this.attemptLogin);
     }
 
     componentWillMount () {
-        this.keyboardWillShowSub = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow);
-        this.keyboardWillHideSub = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide);
+        this.keyboardWillShowSub = Keyboard.addListener(
+            Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+            this.keyboardWillShow
+        );
+
+        this.keyboardWillHideSub = Keyboard.addListener(
+            Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
+            this.keyboardWillHide
+        );
     }
 
     componentDidMount() {
@@ -69,72 +81,106 @@ export default class LoginScreen extends React.Component {
     }
 
     keyboardWillShow = (event) => {
+        this.setState({keyboardOn: true});
+
         Animated.timing(this.imageHeight, {
             duration: event.duration,
-            toValue: 100,
+            toValue: 150,
         }).start();
     };
 
     keyboardWillHide = (event) => {
+        this.setState({keyboardOn: false});
+
         Animated.timing(this.imageHeight, {
-            duration: event.duration,
+            duration: Platform.OS === 'ios' ? event.duration : 300,
             toValue: 200,
         }).start();
     };
 
     render() {
         return (
-            <KeyboardAvoidingView
-                behavior="padding"
-                style={styles.container}>
+            <Image
+                style={{
+                    flex: 1,
+                    alignSelf: 'stretch',
+                    width: undefined,
+                    height: undefined,
+                }}
+                source={require('../images/bg5.jpg')}
+                resizeMode='cover'>
 
-                <MessageBar ref='alert' />
+                <KeyboardAvoidingView
+                    behavior="padding"
+                    style={styles.container}
+                    keyboardVerticalOffset={Platform.OS === 'android' ? -700 : 0}>
+                    <StatusBar
+                        backgroundColor='rgba(255,255,255,0)'//'#1685ce'//'#639ea0'//'#1f74ad'
+                        translucent={true}
+                        barStyle="light-content"
+                    />
+                    <View style={styles.logoContainer}>
+                        <Animated.Image
+                            style={[
+                                    styles.logo,
+                                { height: this.imageHeight },
+                                ( Platform.OS === 'android' && this.state.keyboardOn ) ?
+                                { display: 'none' } : null
+                            ]}
+                            source={require('../images/logo_placeholder.png')} />
+                    </View>
 
-                <View style={styles.logoContainer}>
-                    <Animated.Image
-                        style={[styles.logo, { height: this.imageHeight }]}
-                        source={require('../images/logo_placeholder2.png')} />
-                </View>
+                    <View style={styles.formContainer}>
+                        <TextInput
+                            autoCorrect={false}
+                            returnKeyType="next"
+                            style={styles.input}
+                            placeholder="Enter Username"
+                            onFocus={() => {
+                                if (Platform.OS === 'android')
+                                this.setState({keyboardOn: true})
+                            }}
+                            onChangeText={(text) => this.setState({username: text})}
+                            onSubmitEditing={() => this.passwordInput.focus()}
+                            underlineColorAndroid='transparent' />
+                        <TextInput
+                            ref={(input) => this.passwordInput = input}
+                            returnKeyType="go"
+                            style={styles.input}
+                            placeholder="Enter Password"
+                            secureTextEntry={true}
+                            onChangeText={(text) => this.setState({password: text})}
+                            onFocus={() => {
+                                if (Platform.OS === 'android')
+                                this.setState({keyboardOn: true})
+                            }}
+                            underlineColorAndroid='transparent' />
+                        <TouchableOpacity
+                            style={styles.buttonContainer}
+                            onPress={this.onLoginButtonPressed}>
+                            <Text style={styles.buttonText}>Log in</Text>
+                        </TouchableOpacity>
+                    </View>
 
-                <View style={styles.formContainer}>
-                    <TextInput
-                        autoCorrect={false}
-                        returnKeyType="next"
-                        style={styles.input}
-                        placeholder="Enter Username"
-                        onChangeText={(text) => this.setState({username: text})}
-                        onSubmitEditing={() => this.passwordInput.focus()}/>
-                    <TextInput
-                        ref={(input) => this.passwordInput = input}
-                        returnKeyType="go"
-                        style={styles.input}
-                        placeholder="Enter Password"
-                        secureTextEntry={true}
-                        onChangeText={(text) => this.setState({password: text})}/>
-                    <TouchableOpacity style={styles.buttonContainer}>
-                        <Button
-                            title="LOGIN"
-                            style={styles.buttonText}
-                            onPress={this.onLoginButtonPressed}
-                        />
-                    </TouchableOpacity>
-                </View>
+                    <MessageBar ref='alert' />
 
-            </KeyboardAvoidingView>
+                </KeyboardAvoidingView>
+            </Image>
                     )
                 }
             }
 
             const styles = StyleSheet.create({
                 container: {
-                    backgroundColor: '#3498db',
+                    backgroundColor: 'rgba(255,255,255,0)',//'#86c7c9',//'#3498db',
                     flex: 1,
                     padding: 20,
-                    justifyContent: 'space-between'
+                    justifyContent: 'space-between',
                 },
                 buttonContainer: {
-                    backgroundColor: '#2980b9',
-                    paddingVertical: 10
+                    backgroundColor: '#045d79',//'#2980b9',
+                    paddingVertical: 10,
+                    marginBottom: 15
                 },
                 buttonText: {
                     textAlign: 'center',
@@ -156,15 +202,15 @@ export default class LoginScreen extends React.Component {
                 formContainer: {
                     justifyContent: 'flex-end',
                     padding: 20,
-                    //paddingBottom: 40
+                    paddingBottom: 60
                     //margin: 30
                 },
                 input: {
-                    backgroundColor: 'rgba(255,255,255,0.2)',
-                    color: '#FFF',
+                    color: '#045d79',
+                    backgroundColor: 'rgba(255, 255, 255, 0.75)',
                     height: 40,
                     padding: 10,
-                    marginVertical: 10,
+                    marginBottom: 12,
                 },
                 title: {
                     color: '#FFF',
