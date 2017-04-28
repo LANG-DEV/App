@@ -1,34 +1,30 @@
 import React from 'react';
 import {
-    Button,
-    Container,
-    Image,
-    KeyboardAvoidingView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View
+    Animated,Container,Button,Image,KeyboardAvoidingView,
+    StyleSheet,Text,TextInput,TouchableOpacity,View,Keyboard
 } from 'react-native';
 
 import { StackNavigator } from 'react-navigation';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import auth from '../lib/auth';
 
 export default class LoginScreen extends React.Component {
-    static navigationOptions = {
-        title: 'Login',
-    }
+  static navigationOptions = {
+    title: 'Login',
+  };
 
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
+    
+    this.state = {
+        username: '',
+        password: '',
+    };
 
-        this.state = {
-            username: '',
-            password: '',
-        }
-    }
+    this.imageHeight = new Animated.Value(200);
+  }
 
     attemptLogin = (res) => {
         console.log("res: " + JSON.stringify(res));
@@ -55,93 +51,123 @@ export default class LoginScreen extends React.Component {
     onLoginButtonPressed = () => {
         auth.login(this.state.username, this.state.password, this.attemptLogin);
     }
+    
+    componentWillMount () {
+      this.keyboardWillShowSub = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow);
+      this.keyboardWillHideSub = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide);
+    }
 
     componentDidMount() {
         MessageBarManager.registerMessageBar(this.refs.alert);
     }
 
-    componentWillUnmount() {
-        MessageBarManager.unregisterMessageBar();
-    }
+  componentWillUnmount() {
+    this.keyboardWillShowSub.remove();
+    this.keyboardWillHideSub.remove();
+    
+    MessageBarManager.unregisterMessageBar();
+  }
 
-    render() {
-        return (
-            <KeyboardAvoidingView
-                style={styles.container}
-                behavior='padding'>
+  keyboardWillShow = (event) => {
+    Animated.timing(this.imageHeight, {
+      duration: event.duration,
+      toValue: 50,
+    }).start();
+  };
 
-                <MessageBar ref='alert' />
+  keyboardWillHide = (event) => {
+    Animated.timing(this.imageHeight, {
+      duration: event.duration,
+      toValue: 200,
+    }).start();
+  };
 
-                <View style={styles.logoContainer}>
-                    <Image
-                        style={styles.logo}
-                        source={require('../images/logo_placeholder.png')} />
-                    <Text style={styles.title}>
-                        浪！
-                    </Text>
-                </View>
+  render() {
+    return (
+      <KeyboardAvoidingView
+        behavior="padding"
+        style={styles.container}>
 
-                <View style={styles.formContainer}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Enter Username"
-                        onChangeText={(text) => this.setState({username: text})}/>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Enter Password"
-                        secureTextEntry={true}
-                        onChangeText={(text) => this.setState({password: text})}/>
-                    <Button
-                        title='LOGIN'
-                        style={styles.buttonContainer}
-                        onPress={this.onLoginButtonPressed}>
+        <View style={styles.logoContainer}>
+          <Animated.Image
+            style={[styles.logo, { height: this.imageHeight }]}
+            source={require('../images/logo_placeholder.png')} />
+          <Text style={styles.title}>
+            浪！
+          </Text>
+        </View>
 
-                    </Button>
-                </View>
+        <View style={styles.formContainer}>
+          <TextInput
+            returnKeyType="next"
+            style={styles.input}
+            placeholder="Enter Username"
+            onChangeText={(text) => this.setState({username: text})}
+            onSubmitEditing={() => this.passwordInput.focus()}/>
+          <TextInput
+            ref={(input) => this.passwordInput = input}
+            returnKeyType="go"
+            style={styles.input}
+            placeholder="Enter Password"
+            secureTextEntry={true}
+            onChangeText={(text) => this.setState({password: text})}/>
+          <TouchableOpacity style={styles.buttonContainer}>
+            <Button title="LOGIN" style={styles.buttonText} />
+          </TouchableOpacity>
+        </View>
 
-            </KeyboardAvoidingView>
-        )
-    }
+      </KeyboardAvoidingView>
+    )
+  }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        backgroundColor: '#3498db',
-        flex: 1
-    },
-    buttonContainer: {
-        backgroundColor: '#2980b9',
-        paddingVertical: 15
-    },
-    buttonText: {
-        textAlign: 'center',
-        color: '#FFF'
-    },
-    logo: {
-        height: 100,
-        width: 100
-    },
-    logoContainer: {
-        alignItems: 'center',
-        flexGrow: 1,
-        justifyContent: 'center'
-    },
-    formContainer: {
-        padding: 20
-    },
-    input: {
-        backgroundColor: 'rgba(255,255,255,0.2)',
-        color: '#FFF',
-        height: 40,
-        padding: 10,
-        margin: 10,
-    },
-    title: {
-        color: '#FFF',
-        fontWeight: 'bold',
-        fontSize: 40,
-        marginTop: 10,
-        marginLeft: 30,
-        textAlign: 'center'
-    }
+  container: {
+    backgroundColor: '#3498db',
+    flex: 1,
+    padding: 20,
+    justifyContent: 'space-between'
+  },
+  buttonContainer: {
+    backgroundColor: '#2980b9',
+    paddingVertical: 10
+  },
+  buttonText: {
+    textAlign: 'center',
+    color: '#FFF'
+  },
+  logo: {
+    height: 200,
+    width: 200,
+    //flex: 1,
+    resizeMode: 'contain'
+  },
+  logoContainer: {
+    alignItems: 'center',
+    flex: 1,
+    flexGrow: 1,
+    justifyContent: 'center',
+    //resizeMode: 'cover'
+  },
+  formContainer: {
+    justifyContent: 'flex-end',
+    padding: 20,
+    //paddingBottom: 40
+    //margin: 30
+  },
+  input: {
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    color: '#FFF',
+    height: 40,
+    padding: 10,
+    marginVertical: 10,
+  },
+  title: {
+    color: '#FFF',
+    fontWeight: 'bold',
+    fontSize: 40,
+    marginTop: 10,
+    marginLeft: 30,
+    textAlign: 'center'
+  }
 });
