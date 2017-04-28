@@ -93,7 +93,7 @@ export default class LoginScreen extends React.Component {
                 <View style={styles.logoContainer}>
                     <Animated.Image
                         style={[styles.logo, { height: this.imageHeight }]}
-                        source={require('../images/logo_placeholder2.png')} />
+                        source={require('../images/logo_placeholder.png')} />
                     </View>
 
                     <View style={styles.formContainer}>
@@ -141,7 +141,6 @@ export default class LoginScreen extends React.Component {
                 logo: {
                     height: 200,
                     width: 200,
-                    //flex: 1,
                     resizeMode: 'contain'
                 },
                 logoContainer: {
@@ -153,8 +152,6 @@ export default class LoginScreen extends React.Component {
                 formContainer: {
                     justifyContent: 'flex-start',
                     padding: 20,
-                    //paddingBottom: 40
-                    //margin: 30
                 },
                 input: {
                     backgroundColor: 'rgba(255,255,255,0.2)',
