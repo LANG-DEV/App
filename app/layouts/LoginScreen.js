@@ -3,8 +3,12 @@ import {
     Animated,Container,Button,Image,KeyboardAvoidingView,
     StyleSheet,Text,TextInput,TouchableOpacity,View,Keyboard
 } from 'react-native';
+
 import { StackNavigator } from 'react-navigation';
+import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
+import auth from '../lib/auth';
 
 export default class LoginScreen extends React.Component {
   static navigationOptions = {
@@ -13,18 +17,55 @@ export default class LoginScreen extends React.Component {
 
   constructor(props) {
     super(props);
+    
+    this.state = {
+        username: '',
+        password: '',
+    };
 
     this.imageHeight = new Animated.Value(200);
   }
 
-  componentWillMount () {
-    this.keyboardWillShowSub = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow);
-    this.keyboardWillHideSub = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide);
-  }
+    attemptLogin = (res) => {
+        console.log("res: " + JSON.stringify(res));
+        if (res.success) {
+            MessageBarManager.showAlert({
+                title: 'Login successful!',
+                message: res.body,
+                alertType: 'info',
+                durationToShow: 0,
+            });
+        } else {
+            MessageBarManager.showAlert({
+                title: 'Oops...',
+                message: res.body,
+                alertType: 'error',
+                durationToShow: 0,
+                stylesheetError: {
+                    backgroundColor: 'rgba(231, 76, 60, 1)'
+                }
+            });
+        }
+    }
+
+    onLoginButtonPressed = () => {
+        auth.login(this.state.username, this.state.password, this.attemptLogin);
+    }
+    
+    componentWillMount () {
+      this.keyboardWillShowSub = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow);
+      this.keyboardWillHideSub = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide);
+    }
+
+    componentDidMount() {
+        MessageBarManager.registerMessageBar(this.refs.alert);
+    }
 
   componentWillUnmount() {
     this.keyboardWillShowSub.remove();
     this.keyboardWillHideSub.remove();
+    
+    MessageBarManager.unregisterMessageBar();
   }
 
   keyboardWillShow = (event) => {
@@ -61,7 +102,7 @@ export default class LoginScreen extends React.Component {
             returnKeyType="next"
             style={styles.input}
             placeholder="Enter Username"
-            onChangeText={(text) => this.setState({text})}
+            onChangeText={(text) => this.setState({username: text})}
             onSubmitEditing={() => this.passwordInput.focus()}/>
           <TextInput
             ref={(input) => this.passwordInput = input}
@@ -69,7 +110,7 @@ export default class LoginScreen extends React.Component {
             style={styles.input}
             placeholder="Enter Password"
             secureTextEntry={true}
-            onChangeText={(text) => this.setState({text})}/>
+            onChangeText={(text) => this.setState({password: text})}/>
           <TouchableOpacity style={styles.buttonContainer}>
             <Button title="LOGIN" style={styles.buttonText} />
           </TouchableOpacity>

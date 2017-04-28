@@ -1,28 +1,29 @@
 {
-  "name": "App",
-  "version": "0.0.1",
-  "private": true,
-  "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest"
-  },
-  "dependencies": {
-    "flow": "^0.2.3",
-    "react": "16.0.0-alpha.6",
-    "react-native": "0.43.3",
-    "react-native-keyboard-aware-scroll-view": "^0.2.8",
-    "react-navigation": "^1.0.0-beta.9"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.24.1",
-    "babel-jest": "19.0.0",
-    "babel-preset-flow": "^6.23.0",
-    "babel-preset-react-native": "1.9.1",
-    "flow-bin": "^0.40.0",
-    "jest": "19.0.2",
-    "react-test-renderer": "16.0.0-alpha.6"
-  },
-  "jest": {
-    "preset": "react-native"
-  }
+	"name": "App",
+	"version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"start": "node node_modules/react-native/local-cli/cli.js start",
+		"test": "jest"
+	},
+	"dependencies": {
+		"flow": "^0.2.3",
+		"react": "16.0.0-alpha.6",
+		"react-native": "0.43.3",
+		"react-native-message-bar": "^1.6.0",
+		"react-native-simple-store": "^1.1.0",
+		"react-navigation": "^1.0.0-beta.9"
+	},
+	"devDependencies": {
+		"babel-cli": "^6.24.1",
+		"babel-jest": "19.0.0",
+		"babel-preset-flow": "^6.23.0",
+		"babel-preset-react-native": "1.9.1",
+		"flow-bin": "^0.40.0",
+		"jest": "19.0.2",
+		"react-test-renderer": "16.0.0-alpha.6"
+	},
+	"jest": {
+		"preset": "react-native"
+	}
 }
