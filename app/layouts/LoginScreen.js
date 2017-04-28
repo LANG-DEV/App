@@ -94,35 +94,34 @@ export default class LoginScreen extends React.Component {
                     <Animated.Image
                         style={[styles.logo, { height: this.imageHeight }]}
                         source={require('../images/logo_placeholder.png')} />
-                    <Text style={styles.title}>
-                        浪！
-                    </Text>
-                </View>
+                        <Text style={styles.title}>
+                            浪！
+                        </Text>
+                    </View>
 
-                <View style={styles.formContainer}>
-                    <TextInput
-                        returnKeyType="next"
-                        style={styles.input}
-                        placeholder="Enter Username"
-                        onChangeText={(text) => this.setState({username: text})}
-                        onSubmitEditing={() => this.passwordInput.focus()}/>
-                    <TextInput
-                        ref={(input) => this.passwordInput = input}
-                        returnKeyType="go"
-                        style={styles.input}
-                        placeholder="Enter Password"
-                        secureTextEntry={true}
-                        onChangeText={(text) => this.setState({password: text})}/>
-                    <TouchableOpacity style={styles.buttonContainer}>
-                        <Button
-                            title="LOGIN"
-                            style={styles.buttonText}
-                            onPress={this.onLoginButtonPressed}
-                        />
-                    </TouchableOpacity>
-                </View>
+                    <View style={styles.formContainer}>
+                        <TextInput
+                            autoCorrect={false}
+                            returnKeyType="next"
+                            style={styles.input}
+                            placeholder="Enter Username"
+                            onChangeText={(text) => this.setState({username: text})}
+                            onSubmitEditing={() => this.passwordInput.focus()}/>
+                            <TextInput
+                                ref={(input) => this.passwordInput = input}
+                                returnKeyType="go"
+                                style={styles.input}
+                                placeholder="Enter Password"
+                                secureTextEntry={true}
+                                onChangeText={(text) => this.setState({password: text})}/>
+                                <TouchableOpacity
+                                    onPress={this.onLoginButtonPressed}
+                                    style={styles.buttonContainer}>
+                                    <Text style={styles.buttonText}>LOGIN</Text>
+                                </TouchableOpacity>
+                            </View>
 
-            </KeyboardAvoidingView>
+                        </KeyboardAvoidingView>
                     )
                 }
             }
@@ -132,7 +131,7 @@ export default class LoginScreen extends React.Component {
                     backgroundColor: '#3498db',
                     flex: 1,
                     padding: 20,
-                    justifyContent: 'space-between'
+                    justifyContent: 'flex-start'
                 },
                 buttonContainer: {
                     backgroundColor: '#2980b9',
@@ -153,10 +152,9 @@ export default class LoginScreen extends React.Component {
                     flex: 1,
                     flexGrow: 1,
                     justifyContent: 'center',
-                    //resizeMode: 'cover'
                 },
                 formContainer: {
-                    justifyContent: 'flex-end',
+                    justifyContent: 'flex-start',
                     padding: 20,
                     //paddingBottom: 40
                     //margin: 30
