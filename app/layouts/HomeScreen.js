@@ -1,13 +1,21 @@
+/**
+ * @flow
+ */
+
 import React from 'react';
 import {
-  Text, Button, KeyboardAvoidingView, View, StyleSheet,
-  TouchableOpacity
+    Text, Button, KeyboardAvoidingView, View, StyleSheet,
+    TouchableOpacity
 } from 'react-native';
 
 export default class HomeScreen extends React.Component {
     static navigationOptions = {
         title: 'Home'
     };
+
+    componentDidMount() {
+        this.props.navigation.navigate('Login');
+    }
 
     render() {
         return (
@@ -18,16 +26,16 @@ export default class HomeScreen extends React.Component {
                     title='Log in'/>
 
             </KeyboardAvoidingView>
-        );
+            );
+        }
     }
-}
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#3498db'
-  },
-  loginButtonContainer: {
-    backgroundColor: '#2980b9',
-    flexGrow: 1
-  }
-});
+    const styles = StyleSheet.create({
+        container: {
+            backgroundColor: '#3498db'
+        },
+        loginButtonContainer: {
+            backgroundColor: '#2980b9',
+            flexGrow: 1
+        }
+    });
