@@ -1,7 +1,7 @@
 import React from 'react';
 import {
-    Container,Button,Image,KeyboardAvoidingView,
-    StyleSheet,Text,TextInput,TouchableOpacity,View
+    Animated,Container,Button,Image,KeyboardAvoidingView,
+    StyleSheet,Text,TextInput,TouchableOpacity,View,Keyboard
 } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -11,26 +11,45 @@ export default class LoginScreen extends React.Component {
     title: 'Login',
   };
 
-  // constructor(props) {
-  //   super(props);
-  //
-  //   this.keyboardHeight = new Animated.Value(0);
-  //   this.imageHeight = new Animated.Value(IMAGE_HEIGHT);
-  // }
+  constructor(props) {
+    super(props);
+
+    this.imageHeight = new Animated.Value(200);
+  }
+
+  componentWillMount () {
+    this.keyboardWillShowSub = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow);
+    this.keyboardWillHideSub = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide);
+  }
+
+  componentWillUnmount() {
+    this.keyboardWillShowSub.remove();
+    this.keyboardWillHideSub.remove();
+  }
+
+  keyboardWillShow = (event) => {
+    Animated.timing(this.imageHeight, {
+      duration: event.duration,
+      toValue: 50,
+    }).start();
+  };
+
+  keyboardWillHide = (event) => {
+    Animated.timing(this.imageHeight, {
+      duration: event.duration,
+      toValue: 200,
+    }).start();
+  };
 
   render() {
     return (
-      <KeyboardAwareScrollView
-        resetScrollToCoords={{ x: 0, y: 0 }}
-        contentContainerStyle={styles.container}
-        //enableAutoAutomaticScroll={false}
-        extraScrollHeight={120}
-        scrollEnabled={false}
-        style={{backgroundColor: '#3498db'}}>
+      <KeyboardAvoidingView
+        behavior="padding"
+        style={styles.container}>
 
         <View style={styles.logoContainer}>
-          <Image
-            style={styles.logo}
+          <Animated.Image
+            style={[styles.logo, { height: this.imageHeight }]}
             source={require('../images/logo_placeholder.png')} />
           <Text style={styles.title}>
             浪！
@@ -56,14 +75,14 @@ export default class LoginScreen extends React.Component {
           </TouchableOpacity>
         </View>
 
-      </KeyboardAwareScrollView>
+      </KeyboardAvoidingView>
     )
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    //backgroundColor: '#3498db',
+    backgroundColor: '#3498db',
     flex: 1,
     padding: 20,
     justifyContent: 'space-between'
@@ -77,13 +96,17 @@ const styles = StyleSheet.create({
     color: '#FFF'
   },
   logo: {
-    height: 100,
-    width: 100
+    height: 200,
+    width: 200,
+    //flex: 1,
+    resizeMode: 'contain'
   },
   logoContainer: {
     alignItems: 'center',
+    flex: 1,
     flexGrow: 1,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    //resizeMode: 'cover'
   },
   formContainer: {
     justifyContent: 'flex-end',
