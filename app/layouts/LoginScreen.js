@@ -71,7 +71,7 @@ export default class LoginScreen extends React.Component {
     keyboardWillShow = (event) => {
         Animated.timing(this.imageHeight, {
             duration: event.duration,
-            toValue: 50,
+            toValue: 100,
         }).start();
     };
 
@@ -93,10 +93,7 @@ export default class LoginScreen extends React.Component {
                 <View style={styles.logoContainer}>
                     <Animated.Image
                         style={[styles.logo, { height: this.imageHeight }]}
-                        source={require('../images/logo_placeholder.png')} />
-                        <Text style={styles.title}>
-                            浪！
-                        </Text>
+                        source={require('../images/logo_placeholder2.png')} />
                     </View>
 
                     <View style={styles.formContainer}>
