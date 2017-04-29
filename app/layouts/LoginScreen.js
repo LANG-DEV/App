@@ -1,13 +1,13 @@
 import React from 'react';
 import {
-    Animated, Container, Button, Image, KeyboardAvoidingView, StyleSheet, Text,
-    TextInput, TouchableOpacity, View, Keyboard, Platform, StatusBar
+    Animated, Container, Image, KeyboardAvoidingView, StyleSheet, Text,
+    TextInput, TouchableHighlight, View, Keyboard, Platform, StatusBar
 } from 'react-native';
 
-import Dimensions from 'Dimensions'
-
+import { Grid, Col, Button, Icon } from 'native-base';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
+import Dimensions from 'Dimensions'
 
 import auth from '../lib/auth';
 
@@ -121,7 +121,7 @@ export default class LoginScreen extends React.Component {
                     <View style={styles.logoContainer}>
                         <Animated.Image
                             style={[
-                                    styles.logo,
+                                styles.logo,
                                 { height: this.imageHeight },
                                 ( Platform.OS === 'android' && this.state.keyboardOn ) ?
                                 { display: 'none' } : null
@@ -154,11 +154,37 @@ export default class LoginScreen extends React.Component {
                                 this.setState({keyboardOn: true})
                             }}
                             underlineColorAndroid='transparent' />
-                        <TouchableOpacity
-                            style={styles.buttonContainer}
-                            onPress={this.onLoginButtonPressed}>
-                            <Text style={styles.buttonText}>Log in</Text>
-                        </TouchableOpacity>
+                        {/* <TouchableOpacity
+                                        style={styles.buttonContainer}
+                                        onPress={this.onLoginButtonPressed}>
+                                        <Text style={styles.buttonText}>Log in</Text>
+                        </TouchableOpacity> */}
+                        <Grid>
+                            <Col size={2.5}>
+                                <Button block primary iconLeft
+                                    onPress={this.onLoginButtonPressed}
+                                    style={StyleSheet.flatten(styles.loginButton)}>
+                                    <Icon name='log-in' />
+                                    <Text style={StyleSheet.flatten([styles.buttonText, {color:'white', fontWeight:'bold'}])}>
+                                        Log in
+                                    </Text>
+                                </Button>
+                            </Col>
+                            <Col size={1}>
+                                <Button block light
+                                    style={StyleSheet.flatten(styles.signupButton)}
+                                    onPress={this.onLoginButtonPressed}>
+                                    <Text style={StyleSheet.flatten(styles.buttonText)}>
+                                        Sign up
+                                    </Text>
+                                </Button>
+                            </Col>
+                        </Grid>
+                        
+                        <Button transparent>
+                            <Text>What's my password?</Text>
+                            <Text>(...Wait what's my username?)</Text>
+                        </Button>
                     </View>
 
                     <MessageBar ref='alert' />
@@ -177,13 +203,21 @@ export default class LoginScreen extends React.Component {
                     justifyContent: 'space-between',
                 },
                 buttonContainer: {
-                    backgroundColor: '#045d79',//'#2980b9',
+                    height: 60,
                     paddingVertical: 10,
-                    marginBottom: 15
                 },
-                buttonText: {
-                    textAlign: 'center',
-                    color: '#FFF'
+                loginButtonContainer: {
+
+                },
+                signupButtonContainer: {
+
+                },
+                loginButton: {
+                    backgroundColor: '#045d79',
+                    marginRight: 10,
+                },
+                signupButton: {
+                    backgroundColor: 'rgba(255, 255, 255, 0.85)',
                 },
                 logo: {
                     height: 200,
