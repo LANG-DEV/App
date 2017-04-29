@@ -6,7 +6,6 @@ import {
 
 import Dimensions from 'Dimensions'
 
-import { StackNavigator } from 'react-navigation';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
