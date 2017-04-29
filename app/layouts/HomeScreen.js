@@ -1,41 +1,65 @@
 /**
- * @flow
- */
+* @flow
+*/
 
-import React from 'react';
+import React, { Component } from 'react';
 import {
-    Text, Button, KeyboardAvoidingView, View, StyleSheet,
-    TouchableOpacity
-} from 'react-native';
+    Container, Content, Text, Input, Card, Header, Body, Button, Title,
+    CardItem, Form, Item
+} from 'native-base';
 
-export default class HomeScreen extends React.Component {
-    static navigationOptions = {
-        title: 'Home'
-    };
-
-    componentDidMount() {
-        this.props.navigation.navigate('Login');
+import { Actions } from 'react-native-router-flux';
+export default class HomeScreen extends Component {
+    render(){
+        return(
+            <Container>
+                <Header>
+                    <Body>
+                        <Title>Home</Title>
+                    </Body>
+                </Header>
+                <Content padder>
+                    <Card>
+                        <CardItem>
+                            <Body>
+                                <Text>
+                                    This home page is still under construction...
+                                </Text>
+                            </Body>
+                        </CardItem>
+                    </Card>
+                    <Form>
+                        <Item>
+                            <Input placeholder="Username" />
+                        </Item>
+                        <Item>
+                            <Input placeholder="Username" />
+                        </Item>
+                        <Item>
+                            <Input placeholder="Username" />
+                        </Item>
+                        <Item>
+                            <Input placeholder="Username" />
+                        </Item>
+                        <Item>
+                            <Input placeholder="Username" />
+                        </Item>
+                        <Item>
+                            <Input placeholder="Username" />
+                        </Item>
+                        <Item>
+                            <Input placeholder="Username" />
+                        </Item>
+                        <Item last>
+                            <Input placeholder="Password" />
+                        </Item>
+                    </Form>
+                    <Button block style={{alignSelf: 'center', margin: 30}}
+                        onPress={Actions.login}>
+                        <Text>Go to Log-in Page</Text>
+                    </Button>
+                </Content>
+            </Container>
+        );
     }
-
-    render() {
-        return (
-            <KeyboardAvoidingView style={styles.container}>
-                <Text>This is the home page.</Text>
-                <Button style={styles.loginButtonContainer}
-                    onPress={() => this.props.navigation.navigate('Login')}
-                    title='Log in'/>
-
-            </KeyboardAvoidingView>
-            );
-        }
-    }
-
-    const styles = StyleSheet.create({
-        container: {
-            backgroundColor: '#3498db'
-        },
-        loginButtonContainer: {
-            backgroundColor: '#2980b9',
-            flexGrow: 1
-        }
-    });
+}
