@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-    Animated, Container, Image, KeyboardAvoidingView, StyleSheet, Text,
+    Container, Image, KeyboardAvoidingView, StyleSheet, Text,
     TextInput, TouchableHighlight, View, Keyboard, Platform, StatusBar
 } from 'react-native';
 
@@ -22,15 +22,11 @@ export default class LoginScreen extends React.Component {
         this.state = {
             username: '',
             password: '',
-            keyboardOn: false,
+            showLogo: true,
         };
-
-        this.keyboardOn = false;
-        this.imageHeight = new Animated.Value(200);
     }
 
     attemptLogin = (res) => {
-        console.log("res: " + JSON.stringify(res));
         if (res.success) {
             MessageBarManager.showAlert({
                 title: 'Login successful!',
@@ -56,46 +52,13 @@ export default class LoginScreen extends React.Component {
         auth.login(this.state.username, this.state.password, this.attemptLogin);
     }
 
-    componentWillMount () {
-        this.keyboardWillShowSub = Keyboard.addListener(
-            Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
-            this.keyboardWillShow
-        );
-
-        this.keyboardWillHideSub = Keyboard.addListener(
-            Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
-            this.keyboardWillHide
-        );
+    onLogoResize = (event) => {
+        if (event.nativeEvent.layout.height < 10) {
+            this.setState({showLogo: false});
+        } else if (!this.state.showLogo) {
+            this.setState({showLogo: true});
+        }
     }
-
-    componentDidMount() {
-        MessageBarManager.registerMessageBar(this.refs.alert);
-    }
-
-    componentWillUnmount() {
-        this.keyboardWillShowSub.remove();
-        this.keyboardWillHideSub.remove();
-
-        MessageBarManager.unregisterMessageBar();
-    }
-
-    keyboardWillShow = (event) => {
-        this.setState({keyboardOn: true});
-
-        Animated.timing(this.imageHeight, {
-            duration: event.duration,
-            toValue: 150,
-        }).start();
-    };
-
-    keyboardWillHide = (event) => {
-        this.setState({keyboardOn: false});
-
-        Animated.timing(this.imageHeight, {
-            duration: Platform.OS === 'ios' ? event.duration : 300,
-            toValue: 200,
-        }).start();
-    };
 
     render() {
         return (
@@ -113,20 +76,23 @@ export default class LoginScreen extends React.Component {
                     behavior="padding"
                     style={styles.container}
                     keyboardVerticalOffset={Platform.OS === 'android' ? -700 : 0}>
+
                     <StatusBar
                         backgroundColor='rgba(255,255,255,0)'//'#1685ce'//'#639ea0'//'#1f74ad'
                         translucent={true}
                         barStyle="light-content"
                     />
+
                     <View style={styles.logoContainer}>
-                        <Animated.Image
+                        <Image
+                            ref='logo'
+                            source={require('../images/logo_placeholder.png')}
                             style={[
                                 styles.logo,
-                                { height: this.imageHeight },
-                                ( Platform.OS === 'android' && this.state.keyboardOn ) ?
-                                { display: 'none' } : null
+                                { height: '75%' },
+                                this.state.showLogo ? {} : {display: 'none'}
                             ]}
-                            source={require('../images/logo_placeholder.png')} />
+                            onLayout={this.onLogoResize} />
                     </View>
 
                     <View style={styles.formContainer}>
@@ -135,13 +101,10 @@ export default class LoginScreen extends React.Component {
                             returnKeyType="next"
                             style={styles.input}
                             placeholder="Enter Username"
-                            onFocus={() => {
-                                if (Platform.OS === 'android')
-                                this.setState({keyboardOn: true})
-                            }}
                             onChangeText={(text) => this.setState({username: text})}
                             onSubmitEditing={() => this.passwordInput.focus()}
                             underlineColorAndroid='transparent' />
+
                         <TextInput
                             ref={(input) => this.passwordInput = input}
                             returnKeyType="go"
@@ -149,47 +112,49 @@ export default class LoginScreen extends React.Component {
                             placeholder="Enter Password"
                             secureTextEntry={true}
                             onChangeText={(text) => this.setState({password: text})}
-                            onFocus={() => {
-                                if (Platform.OS === 'android')
-                                this.setState({keyboardOn: true})
-                            }}
                             underlineColorAndroid='transparent' />
-                        {/* <TouchableOpacity
-                                        style={styles.buttonContainer}
+
+                        <View style={{height: 60}}>
+                            <Grid>
+                                <Col size={2.5}>
+                                    <Button block primary iconLeft
+                                        onPress={this.onLoginButtonPressed}
+                                        style={StyleSheet.flatten(styles.loginButton)}>
+                                        <Icon name='log-in' />
+                                        <Text style={StyleSheet.flatten([ styles.buttonText, {color:'white', fontWeight:'700'} ])}>
+                                            Log in
+                                        </Text>
+                                    </Button>
+                                </Col>
+
+                                <Col size={1}>
+                                    <Button block light
+                                        style={StyleSheet.flatten(styles.signupButton)}
                                         onPress={this.onLoginButtonPressed}>
-                                        <Text style={styles.buttonText}>Log in</Text>
-                        </TouchableOpacity> */}
-                        <Grid>
-                            <Col size={2.5}>
-                                <Button block primary iconLeft
-                                    onPress={this.onLoginButtonPressed}
-                                    style={StyleSheet.flatten(styles.loginButton)}>
-                                    <Icon name='log-in' />
-                                    <Text style={StyleSheet.flatten([styles.buttonText, {color:'white', fontWeight:'bold'}])}>
-                                        Log in
-                                    </Text>
-                                </Button>
-                            </Col>
-                            <Col size={1}>
-                                <Button block light
-                                    style={StyleSheet.flatten(styles.signupButton)}
-                                    onPress={this.onLoginButtonPressed}>
-                                    <Text style={StyleSheet.flatten(styles.buttonText)}>
-                                        Sign up
-                                    </Text>
-                                </Button>
-                            </Col>
-                        </Grid>
-                        
-                        <Button transparent>
-                            <Text>What's my password?</Text>
-                            <Text>(...Wait what's my username?)</Text>
+                                        <Text style={StyleSheet.flatten([ styles.buttonText, {color: '#045d79'} ])}>
+                                            Sign up
+                                        </Text>
+                                    </Button>
+                                </Col>
+                            </Grid>
+                        </View>
+
+                        <Button block transparent
+                            style={StyleSheet.flatten(styles.forgotPasswordButton)}>
+                            <View style={StyleSheet.flatten(styles.forgotPasswordContainer)}>
+                                <Text style={styles.forgotPasswordText}>
+                                    What's my password?
+                                </Text>
+                                <Text style={[styles.forgotPasswordText, {fontSize: 10}]}>
+                                    (...Wait what's my username?)
+                                </Text>
+                            </View>
                         </Button>
                     </View>
 
-                    <MessageBar ref='alert' />
-
                 </KeyboardAvoidingView>
+
+                <MessageBar ref='alert' />
             </Image>
                     )
                 }
@@ -203,8 +168,6 @@ export default class LoginScreen extends React.Component {
                     justifyContent: 'space-between',
                 },
                 buttonContainer: {
-                    height: 60,
-                    paddingVertical: 10,
                 },
                 loginButtonContainer: {
 
@@ -230,13 +193,26 @@ export default class LoginScreen extends React.Component {
                     flex: 1,
                     flexGrow: 1,
                     justifyContent: 'center',
+                    // backgroundColor: 'blue',
                     //resizeMode: 'cover'
                 },
                 formContainer: {
-                    justifyContent: 'flex-end',
+                    // justifyContent: 'flex-end',
                     padding: 20,
-                    paddingBottom: 60
+                    marginBottom: 20,
+                    // backgroundColor: 'red'
                     //margin: 30
+                },
+                forgotPasswordButton: {
+                    alignSelf: 'flex-end',
+                    // backgroundColor: 'green',
+                },
+                forgotPasswordContainer: {
+                    alignSelf: 'flex-end',
+                },
+                forgotPasswordText: {
+                    color: '#045d79',
+                    fontWeight: '500',
                 },
                 input: {
                     color: '#045d79',
