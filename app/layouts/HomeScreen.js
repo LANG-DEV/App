@@ -28,25 +28,7 @@ export default class HomeScreen extends Component {
                             </Body>
                         </CardItem>
                     </Card>
-                    <Form>
-                        <Item>
-                            <Input placeholder="Username" />
-                        </Item>
-                        <Item>
-                            <Input placeholder="Username" />
-                        </Item>
-                        <Item>
-                            <Input placeholder="Username" />
-                        </Item>
-                        <Item>
-                            <Input placeholder="Username" />
-                        </Item>
-                        <Item>
-                            <Input placeholder="Username" />
-                        </Item>
-                        <Item>
-                            <Input placeholder="Username" />
-                        </Item>
+                    <Form>  
                         <Item>
                             <Input placeholder="Username" />
                         </Item>
@@ -57,6 +39,11 @@ export default class HomeScreen extends Component {
                     <Button block style={{alignSelf: 'center', margin: 30}}
                         onPress={Actions.login}>
                         <Text>Go to Log-in Page</Text>
+                    </Button>
+
+                    <Button block error style={{alignSelf: 'center', margin: 30}}
+                        onPress={Actions.signup}>
+                        <Text>Go to Sign-up Page</Text>
                     </Button>
                 </Content>
             </Container>
