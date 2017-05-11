@@ -7,16 +7,15 @@ import store from 'react-native-simple-store';
 export default {
     // Attemp to login. 'cb' is called after, with 'true' if authentication
     // succeeds, 'false' otherwise.
-    login: async function(username : string, password : string, cb : Function) {
+    login : async function(username : string, password : string, cb : Function) {
         // Check if token already exists
         console.log('attempting login with: ' + username + "\t" + password);
-        store.get('authToken')
-             .then(authToken => {
-                 if (authToken && cb) {
-                     cb(true);
-                     return;
-                 }
-             }).catch(error => console.error(error.message));
+        store.get('authToken').then(authToken => {
+            if (authToken && cb) {
+                cb(true);
+                return;
+            }
+        }).catch(error => console.error(error.message));
 
         // Otherwise, request a token and run callback
         let obj = await this.getToken(username, password);
@@ -25,37 +24,40 @@ export default {
     },
 
     // Return a Promise to delete the token
-    logout: function() {
-        return store.delete('authToken')
-                    .catch(error => console.error(error.message));
+    logout : function() {
+        return store.delete('authToken').catch(error => console.error(error.message));
     },
 
     // Return a Promise to return the token
-    loggedIn: function() {
-        return store.get('authToken')
-                    .then(authToken => { return authToken })
-                    .catch(error => console.error(error.message));
+    loggedIn : function() {
+        return store.get('authToken').then(authToken => {
+            return authToken
+        }).catch(error => console.error(error.message));
     },
 
     // Retrieve the authToken from server. On success, callback function 'cb'
     // will be called with the state of authentication and authToken
-    getToken: async function(username: string, password: string) {
+    getToken : async function(username : string, password : string) {
         try {
-            let response = await fetch('https://hostingsite/endpoint', {
+            let response = await fetch('http://localhost:8000/identity/login/', {
                 method: 'POST',
-                message: 'login/obtain-auth-token',
-                body: JSON.stringify({
-                    username: username,
-                    password: password
-                })
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: this.serializeJSON({'username': username, 'password': password})
             });
             let responseJson = await response.json();
-            return { success: true, body: responseJson.statusText };
-        } catch(error) {
-            return {
-                success: false,
-                body: 'Network request failed. Please check your connection.'
-            };
+            return {success: true, body: responseJson.statusText};
+        } catch (error) {
+            return {success: false, body: 'Network request failed. Please check your connection.'};
         }
+    },
+
+    serializeJSON : function(data: Object) {
+        let formData = new FormData();
+        formData.append('username', String(data.username));
+        formData.append('password', String(data.password));
+        return formData;
     }
 }

@@ -157,9 +157,11 @@ export default class LoginScreen extends React.Component {
                         </Button>
                     </View>
 
+                    <MessageBar ref='alert' />
+
                 </KeyboardAvoidingView>
 
-                <MessageBar ref='alert' />
+
             </Image>
                     )
                 }
