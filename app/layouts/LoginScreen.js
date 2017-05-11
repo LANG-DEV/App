@@ -4,6 +4,7 @@ import {
     TextInput, TouchableHighlight, View, Keyboard, Platform, StatusBar
 } from 'react-native';
 
+import { Actions } from 'react-native-router-flux';
 import { Grid, Col, Button, Icon } from 'native-base';
 import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 
@@ -50,6 +51,10 @@ export default class LoginScreen extends React.Component {
     onLoginButtonPressed = () => {
         Keyboard.dismiss();
         auth.login(this.state.username, this.state.password, this.attemptLogin);
+    }
+
+    onSignupButtonPressed = () => {
+        Keyboard.dismiss();
     }
 
     onLogoResize = (event) => {
@@ -130,7 +135,7 @@ export default class LoginScreen extends React.Component {
                                 <Col size={1}>
                                     <Button block light
                                         style={StyleSheet.flatten(styles.signupButton)}
-                                        onPress={this.onLoginButtonPressed}>
+                                        onPress={Actions.signup}>
                                         <Text style={StyleSheet.flatten([ styles.buttonText, {color: '#045d79'} ])}>
                                             Sign up
                                         </Text>
@@ -185,7 +190,6 @@ export default class LoginScreen extends React.Component {
                 logo: {
                     height: 200,
                     width: 200,
-                    //flex: 1,
                     resizeMode: 'contain'
                 },
                 logoContainer: {
