@@ -27,7 +27,6 @@ export default class LoginScreen extends React.Component {
     }
 
     attemptLogin = (res) => {
-        console.log("HELLLLLOOOOOO!!!!!!");
         if (res.success) {
             MessageBarManager.showAlert({
                 title: 'Login successful!',
