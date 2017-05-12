@@ -19,7 +19,7 @@ export default class App extends Component {
                     <Scene key="home" component={HomeScreen} title="Home" initial={true} />
                     <Scene key="login" component={LoginScreen} title="Log in" />
                     <Scene key="signup" component={SignupScreen} hideNavBar={false} title="Sign up" />
-                    <Scene key="chat" component={ChatScreen} hideNavBar={false} title="Chat room" />
+                    <Scene key="chat" component={ChatScreen} title="Chat" type="replace" />
                 </Scene>
             </Router>
         );
