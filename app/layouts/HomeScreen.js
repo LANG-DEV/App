@@ -9,9 +9,10 @@ import {
 } from 'native-base';
 
 import { Actions } from 'react-native-router-flux';
+
 export default class HomeScreen extends Component {
     render(){
-        return(
+        return (
             <Container>
                 <Header>
                     <Body>
@@ -32,31 +33,24 @@ export default class HomeScreen extends Component {
                         <Item>
                             <Input placeholder="Username" />
                         </Item>
-                        <Item>
-                            <Input placeholder="Username" />
-                        </Item>
-                        <Item>
-                            <Input placeholder="Username" />
-                        </Item>
-                        <Item>
-                            <Input placeholder="Username" />
-                        </Item>
-                        <Item>
-                            <Input placeholder="Username" />
-                        </Item>
-                        <Item>
-                            <Input placeholder="Username" />
-                        </Item>
-                        <Item>
-                            <Input placeholder="Username" />
-                        </Item>
                         <Item last>
                             <Input placeholder="Password" />
                         </Item>
                     </Form>
+
                     <Button block style={{alignSelf: 'center', margin: 30}}
                         onPress={Actions.login}>
                         <Text>Go to Log-in Page</Text>
+                    </Button>
+
+                    <Button block error style={{alignSelf: 'center', margin: 30}}
+                        onPress={Actions.signup}>
+                        <Text>Go to Sign-up Page</Text>
+                    </Button>
+
+                    <Button block error style={{alignSelf: 'center', margin: 30}}
+                        onPress={Actions.chat}>
+                        <Text>Go to test Chat Page</Text>
                     </Button>
                 </Content>
             </Container>
