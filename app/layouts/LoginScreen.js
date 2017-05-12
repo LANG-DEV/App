@@ -11,13 +11,20 @@ import { MessageBar, MessageBarManager } from 'react-native-message-bar';
 import Dimensions from 'Dimensions'
 
 import auth from '../lib/auth';
+import colors from '../design/colors';
 
 export default class LoginScreen extends React.Component {
     static navigationOptions = {
         title: 'Login',
     };
 
-    constructor(props) {
+    state: {
+        username: string,
+        password: string,
+        showLogo: boolean
+    }
+
+    constructor(props : any) {
         super(props);
 
         this.state = {
@@ -27,8 +34,18 @@ export default class LoginScreen extends React.Component {
         };
     }
 
-    attemptLogin = (res) => {
+    componentDidMount() {
+        MessageBarManager.registerMessageBar(this.refs.alert);
+    }
+
+    componentWillUnmount() {
+        MessageBarManager.unregisterMessageBar();
+    }
+
+    afterLogin = (res : Object) => {
+        console.log("auth login finished");
         if (res.success) {
+            // Successfully received response
             MessageBarManager.showAlert({
                 title: 'Login successful!',
                 message: res.body,
@@ -36,6 +53,7 @@ export default class LoginScreen extends React.Component {
                 durationToShow: 0,
             });
         } else {
+            // Connection failed
             MessageBarManager.showAlert({
                 title: 'Oops...',
                 message: res.body,
@@ -50,14 +68,14 @@ export default class LoginScreen extends React.Component {
 
     onLoginButtonPressed = () => {
         Keyboard.dismiss();
-        auth.login(this.state.username, this.state.password, this.attemptLogin);
+        auth.login(this.state.username, this.state.password, this.afterLogin);
     }
 
     onSignupButtonPressed = () => {
         Keyboard.dismiss();
     }
 
-    onLogoResize = (event) => {
+    onLogoResize = (event : any) => {
         if (event.nativeEvent.layout.height < 10) {
             this.setState({showLogo: false});
         } else if (!this.state.showLogo) {
@@ -156,9 +174,7 @@ export default class LoginScreen extends React.Component {
                             </View>
                         </Button>
                     </View>
-
                     <MessageBar ref='alert' />
-
                 </KeyboardAvoidingView>
 
 
@@ -169,12 +185,13 @@ export default class LoginScreen extends React.Component {
 
             const styles = StyleSheet.create({
                 container: {
-                    backgroundColor: 'rgba(255,255,255,0)',//'#86c7c9',//'#3498db',
+                    backgroundColor: 'rgba(255,255,255,0)',
                     flex: 1,
                     padding: 20,
                     justifyContent: 'space-between',
                 },
                 buttonContainer: {
+
                 },
                 loginButtonContainer: {
 
@@ -183,11 +200,11 @@ export default class LoginScreen extends React.Component {
 
                 },
                 loginButton: {
-                    backgroundColor: '#045d79',
+                    backgroundColor: colors.PRIMARY[1],
                     marginRight: 10,
                 },
                 signupButton: {
-                    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.75)',
                 },
                 logo: {
                     height: 200,
@@ -199,29 +216,23 @@ export default class LoginScreen extends React.Component {
                     flex: 1,
                     flexGrow: 1,
                     justifyContent: 'center',
-                    // backgroundColor: 'blue',
-                    //resizeMode: 'cover'
                 },
                 formContainer: {
-                    // justifyContent: 'flex-end',
                     padding: 20,
                     marginBottom: 20,
-                    // backgroundColor: 'red'
-                    //margin: 30
                 },
                 forgotPasswordButton: {
                     alignSelf: 'flex-end',
-                    // backgroundColor: 'green',
                 },
                 forgotPasswordContainer: {
                     alignSelf: 'flex-end',
                 },
                 forgotPasswordText: {
-                    color: '#045d79',
+                    color: colors.PRIMARY[2],
                     fontWeight: '500',
                 },
                 input: {
-                    color: '#045d79',
+                    color: colors.PRIMARY[2],
                     backgroundColor: 'rgba(255, 255, 255, 0.75)',
                     height: 40,
                     padding: 10,
